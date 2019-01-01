@@ -1,0 +1,145 @@
+
+Description:
+Find the kth largest element in an unsorted array.
+Note that it is the kth largest element in the sorted order
+, not the kth distinct element.
+
+Example 1:
+
+Input: [3,2,1,5,6,4] and k = 2
+Output: 5
+Example 2:
+
+Input: [3,2,3,1,2,4,5,5,6] and k = 4
+Output: 4
+
+思路1：
+排序 将数组降序排列，返回下标为k-1的元素
+T(N)=O(NlogN)
+指定K次的简单排序，时间复杂度O(NK)
+
+思路2：
+维护一个大小为k的堆，堆中存放前k个最大元素
+采用最小堆
+nums=[1,2,6,4,5,6,4], k=3
+216->
+246->426->
+456->546->
+566->656
+时间复杂度 O(NlogK)
+空间复杂度 O(K)
+
+
+public int findKthLargest(int[] nums, int k) {
+        PriorityQueue<Integer> queue = new PriorityQueue<>();
+        for (int key : nums) {
+            //堆没放满就直接放
+            if (queue.size() < k) {
+                queue.offer(key);
+            }
+            //比较key与堆顶元素
+            else {
+                if (key > queue.peek()) {
+                    queue.poll();
+                    queue.offer(key);
+                }
+            }
+        }
+        //取堆顶元素
+        return queue.peek();
+}
+
+
+
+不能使用额外的堆空间？？
+思路3：
+将数组本身堪称最大堆
+1. 借助heapify函数，将数组构造成最大堆
+2. 删除k次堆顶元素(放到数组末尾)，第k次删除的元素就是第k大元素
+时间复杂度 T(N)=N+KlogN=O(KlogN)
+空间复杂度 非递归O(1), 递归O(logN)
+
+public class KthLargestElement {
+
+    public int findKthLargest(int[] nums, int k) {
+        PriorityQueue<Integer> queue = new PriorityQueue<>();
+        for (int key : nums) {
+            //堆没放满就直接放
+            if (queue.size() < k) {
+                queue.offer(key);
+            }
+            //比较key与堆顶元素
+            else {
+                if (key > queue.peek()) {
+                    queue.poll();
+                    queue.offer(key);
+                }
+            }
+        }
+        //取堆顶元素
+        return queue.peek();
+    }
+
+    public int findKthLargestUserHeap(int[] nums, int k) {
+        int n = nums.length;
+        for (int i = n >>> 1; i >= 0; i--) {
+            siftDown(nums, i, n - 1);
+        }
+        int result = nums[0];
+        for (int i = 0; i < k; i++) {
+            result = nums[0];
+            swap(nums, 0, n - i - 1);
+            siftDown(nums, 0, n - 2 - i);
+        }
+        return result;
+    }
+
+    private void siftDown(int[] array, int p, int heapSize) {
+        int value = array[p];
+        int child;
+        while ((child = (p << 1) + 1) <= heapSize) {
+            if (child + 1 <= heapSize) {
+                child = array[child] >= array[child + 1] ? child : child + 1;
+            }
+            if (value >= array[child]) {
+                break;
+            }
+            array[p] = array[child];
+            p = child;
+        }
+        array[p] = value;
+    }
+
+    private void heapifyPostOrder(int[] array, int p, int lastIndex, int heapSize) {
+        if (p <= lastIndex) {
+            heapifyPostOrder(array, (p << 1) + 2, lastIndex, heapSize);
+            heapifyPostOrder(array, (p << 1) + 1, lastIndex, heapSize);
+            siftDown(array, p, heapSize);
+        }
+    }
+
+    private void swap(int[] array, int a, int b) {
+        int t = array[a];
+        array[a] = array[b];
+        array[b] = t;
+    }
+}
+
+
+其他解法：
+1. 基于partition的快速选择算法，平均O(N),最坏O(N^2)
+2. BFPRT算法，O(N)
+
+
+
+
+
+
+
+
+
+
+
+
+
+

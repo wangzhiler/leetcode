@@ -1,0 +1,31 @@
+TAG: HashMap
+
+Description
+Given an array of integers, return indices of the two numbers such that they add up to a specific target.
+You may assume that each input would have exactly one solution, and you may not use the same element twice.
+Example:
+Given nums = [2, 7, 11, 15], target = 9,
+Because nums[0] + nums[1] = 2 + 7 = 9,
+return [0, 1].
+
+
+Solution1: 循环两次，复杂度O(2)
+
+Solution2: 利用HashMap。
+建立hashMap
+根据nums数组下标遍历num，判断是否在HashMap中，如果不在则将target-nums[i]作为key，下标组作为value存入
+直到找到后，将HashMap中的两个value返回
+
+Code:
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        HashMap <Integer, Integer> map=new HashMap<Integer, Integer>();
+        for(int i=0; i<nums.length; i++){
+            if(map.containsKey(nums[i])){
+                return new int[]{map.get(nums[i]), i};
+            }
+            map.put(target-nums[i], i);
+        }
+        return null;
+    }
+}

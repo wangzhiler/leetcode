@@ -1,0 +1,33 @@
+Given a string containing digits from 2-9 inclusive,
+return all possible letter combinations that the number could represent.
+
+A mapping of digit to letters (just like on the telephone buttons) is given below.
+Note that 1 does not map to any letters.
+
+        2 abc    3 def
+4 ghi   5 jkl    6 mno
+7 pqrs  8 tuv    9 wxyz
+
+Example:
+
+Input: "23"
+Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+
+
+
+Solution 1： Combinations via DFS
+【time:O(4^n)    space:O(4^n+n)】
+            2
+          / | \
+       3    3       3
+    /|\    /|\     /|\
+  adaeaf  bdbebf  cdcecf
+
+Solution 2: BFS
+【time:O(4^n)    space:O(2x4^n)】
+solve("23")=solve("2")x+solve("3")
+           =([a,b,c]) x+ [d,e,f]
+           =[ad,bd,cd,ae,be,ce,af,bf,cf]
+
+
+

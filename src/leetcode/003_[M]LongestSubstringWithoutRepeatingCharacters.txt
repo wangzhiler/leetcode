@@ -1,0 +1,54 @@
+Given a string, find the length of the longest substring without repeating characters.
+
+Example 1:
+
+Input: "abcabcbb"
+Output: 3
+Explanation: The answer is "abc", which the length is 3.
+Example 2:
+
+Input: "bbbbb"
+Output: 1
+Explanation: The answer is "b", with the length of 1.
+Example 3:
+
+Input: "pwwkew"
+Output: 3
+Explanation: The answer is "wke", with the length of 3.
+
+Note that the answer must be a substring, "pwke" is a subsequence and not a substring.
+
+
+Solution:
+因为ASCII码字符128位，所以用长度为128的数组hash[]存放即可。
+hash[c]中存放c上次出现的下标+1
+
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int len;
+        len=s.length();
+        if(len==0 || s==null)
+            return 0;
+
+        //prep 存放最近重复的任一c上次出现的下标+1
+        int prep=0;
+        int max=0;
+        int []hash=new int[128];
+
+        for(int i=0; i<len; i++){
+            char c=s.charAt(i);
+            //若c已存在hash中, 保证prep为最近重复的c上次出现的下标+1
+            if(hash[c]>prep){
+                prep=hash[c];
+            }
+            //l为当前i到prep的距离
+            int l=i-prep+1;
+            //hash中不断更新c的索引
+            hash[c]=i+1;
+
+            max=l>max?l:max;
+        }
+        return max;
+    }
+}
